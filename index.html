@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web AI Flights Agent Demo</title>
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <header>
+      <h1>#WebAI Flights</h1>
+      <svg id="talkToAgent" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M680-560q-33 0-56.5-23T600-640v-160q0-34 23.5-57t56.5-23q34 0 57 23t23 57v160q0 34-23 57t-57 23ZM200-80q-33 0-56.5-23.5T120-160v-640q0-33 23.5-56.5T200-880h320v80H200v640h440v-80h80v80q0 33-23.5 56.5T640-80H200Zm80-160v-80h280v80H280Zm0-120v-80h200v80H280Zm440 40h-80v-104q-77-14-128.5-74.5T460-640h80q0 58 41 99t99 41q59 0 99.5-41t40.5-99h80q0 81-51 141.5T720-424v104Z"/></svg>
+      <div id="bookForm">
+        <select id="tripType" class="animate__animated">
+          <option value="roundtrip">Round trip</option>
+          <option value="oneway">One-way</option>
+          <option value="multi">Multi-city</option>
+        </select>
+        
+        <select id="passengerCount" class="animate__animated">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>
+        
+        <select id="tripClass" class="animate__animated">
+          <option value="economy">Economy</option>
+          <option value="premium economy">Premium Economy</option>
+          <option value="business">Business</option>
+          <option value="first">First</option>
+        </select>
+        
+        <ul id="destinations">
+          <li>
+            <input class="tripElement tripFrom" type="text" />
+            <input class="tripElement tripTo" type="text" />
+            <input class="tripElement tripDepart" type="text" placeholder="Depart DD/MM/YY" />
+            <input class="tripElement tripReturn" type="text" placeholder="Return" />
+          </li>
+        </ul>
+         <button id="search" type="button">Search Flights</button>
+      </div>
+      <div id="searchResults"></div>
+    </header>
+    
+    <section>
+      <h2>How to use this demo?</h2>
+      <p>Use the special Web AI Agent microphone button on the right of the form above in a push to talk style. That means when you click on the button and hold it will listen to your voice, and when you let go, it stops listening. Think what you want to say before you push the button so you speak fluently for best results. Let go when you have finished talking!</p>
+      <p>For example to get sarted click and hold the button and try saying this: "I want to book a flight from San Francisco to New York" and then let go of the button. You will then start to see the Agent's inner thinking on the left side panel as it thinks about what you said. The Web AI agent will realise you didnt give it enough information so it will ask you further questions (make sure your speakers are on to hear). Just respond to its follow up questions using the button again each time. Once enough data is given dummy flight search results will be generated and shown - this takes a bit longer so be patient.</p>
+      <p>Top tip: You can even get creative and change your mind about things later - for example once you have some search results, try asking it to change the destination! You can even ask it to suggest destination if you dont know where to go like "Change the destination to somewhere cold in europe?" - have fun!</p>
+    
+      <h2>Where can I learn more about Web AI?</h2>
+      <p> Glad you asked - check out <a href="https://goo.gle/Learn-WebAI" target="_blank">this YouTube course</a> that goes from zero to hero!</p>
+      <p>
+    </section>
+    
+    <footer>
+      <p>Created by <a href="https://www.linkedin.com/in/WebAI" target="_blank">Jason Mayes</a>, Web AI Lead, Google, 2025.</p>
+      <p>Note: This is not an official Google product. This is a demonstration of how Web AI Agents could be applied in the future.</p>
+    </footer>
+    
+    <div id="sidePanel" class="animate__animated animate__bounceInRight">
+      <h2>Agent configuration</h2>
+      <h3>HCI Persona</h3>
+<textarea id="hciPersona">You are a travel bot who needs to book flights for people based on key rules below. Read what text the user sends you carefully along with your last JSON object generation to pick out any missing data you need from that text so that you can call the website's search function below. Dont ask for any other information from the user that is not specified below even if it similar themed question and dont make up values yourself unless the user asks you for a suggestion. You may use a defined default value below if the user does not specify it.
+
+The function to perform a flights search is described in JS Doc format below and only needs the specified parameter values to be filled out. Sensible defaults you can use are also explained in the documentation below:
+
+/** 
+ * Function perform a flights search
+ * @param departureLocation {string} - Where the flight will depart from
+ * @param departureDate {string} - Date of departure in the format DD-MMM-YYYY
+ * @param destinationLocation {string} - Where the flight will fly to
+ * @param returnDate {string} - Date to fly back in the format DD-MMM-YYYY. This field is optional. If this not specified by the user assume a one way trip, in which case write "oneway" in this field value.
+ * @param passengerCount {number} - How many people are travelling? If unknown use 1 person as default.
+ * @param seatClass {string} -  Must be one of: "economy", "premium economy", "business class", or "first class". If the user does not mention any use "economy" as the default.
+**/
+
+For each request from the user respond with a single JSON object containing what you learnt from what they told you and use the value "undefined" for anything you could not figure out. For example:
+
+User says: "I would like to book a flight to London"
+
+You reply with:
+    
+```json
+{
+  "legs": [{
+    "departureLocation": "undefined", 
+    "destinationLocation": "London",
+    "departureDate": "undefined",
+    "returnDate": "undefined"
+  }], 
+  "passengerCount": "1",
+  "seatClass": "economy", 
+  "followUpQuestion": "Where are you departing from and when? Is that a one way trip?",
+  "results": []
+}
+```
+
+Note that the legs property is an array. This allows you to have multiple flight details in the array if they need a multi legged flight to many destinations.
+
+Also note you asked a "followUpQuestion" because some of the object properties you need to fillout are still undefined. Only ask follow up questions about the properties that are set to "undefined". Stay on track and the text you write here should always be a question asking about that proprety value that is missing and double check you are not asking something you already know the answer to in the JSON object.
+    
+Here is another example JSON object you may have written for some different user input:
+
+```json
+{
+  "legs": [{
+    "departureLocation": "undefined", 
+    "destinationLocation": "London",
+    "departureDate": "20-Apr-2025",
+    "returnDate": "25-May-2025"
+  }], 
+  "passengerCount": "1",
+  "seatClass": "economy", 
+  "followUpQuestion": "Where are you departing from?",
+  "results": []
+}
+```
+As "departureLocation" is "undefined", you proivide a question in the "followUpQuestion" property to clarify the missing data.
+    
+Dont ask a follow up question if all search properties are specified, instead use "none" string as shown here if everything else is known and not set to "undefined":
+    
+```json
+{
+  "legs": [{
+    "departureLocation": "San Francisco" 
+    "destinationLocation": "London",
+    "departureDate": "10-Jan-2026",
+    "returnDate": "18-Jan-2026"
+  }], 
+  "passengerCount": "1",
+  "seatClass": "economy", 
+  "followUpQuestion": "none",
+  "results": []
+}
+```
+Only use "none" if no other property is set to "undefined". This is important.
+</textarea>
+
+<h3>Flights API Impersonator Persona</h3>
+<textarea id="fakeAPIPersona">
+You are pretending to be the Google flights API. A user will ask you to generate example flight search results by giving you a specified JSON object, generate at least 5 pretend but realistic flight results using the JSON object information provided by the user and respond as detailed below. Never change the original user's data in the JSON object - copy it exactly and only add data to the results property.
+
+Flight results you generate should be different every time you are asked especially if any JSON object properties change from earlier conversations. Use the users latest provided JSON data to generate a new array of objects with different values containing the following properties:
+
+* airline
+* flight number
+* departing time
+* departing airport short code
+* arriving time
+* arriving airport short code
+* number of flight changes
+* flight duration in hours and minutes
+* aircraft type like Boeing 737
+* cost using integers only
+    
+Insert those newly generated objects into the users provided JSON object under the property named "results" and be sure to keep the format exactly as shown. For example if a user sends you the following JSON object:
+  
+```json
+{
+  "legs": [{
+    "departureLocation": "Seattle" 
+    "destinationLocation": "Paris",
+    "departureDate": "20-Nov-2025",
+    "returnDate": "29-Nov-2025"
+  }], 
+  "passengerCount": "1",
+  "seatClass": "business", 
+  "followUpQuestion": "none",
+  "results": []
+}
+```
+  
+You would add and fill out the results property as if you were estimating flight costs and details for 1 person travelling in economy class and were asking to fly from San Francisco to London, as shown below, keep everything else the same as shown:
+
+```json
+{
+  "legs": [{
+    "departureLocation": "Seattle" 
+    "destinationLocation": "Paris",
+    "departureDate": "20-Nov-2025",
+    "returnDate": "29-Nov-2025"
+  }], 
+  "passengerCount": "1",
+  "seatClass": "business", 
+  "followUpQuestion": "none",
+  "results": [
+  {"airline": "Air France", "flightNumber": "AF456", "departingTime": "10:00 AM", "departingAirport": "SEA", "arrivingTime": "6:00 PM", "arrivingAirport": "CDG", "numberOfFlightChanges": "0", "flightDuration": "10h 30m", "aircraftType": "Airbus A380", "cost": "4500"},
+  {"airline": "Lufthansa", "flightNumber": "LH123", "departingTime": "8:00 AM", "departingAirport": "SEA", "arrivingTime": "4:00 PM", "arrivingAirport": "CDG", "numberOfFlightChanges": "0", "flightDuration": "9h 30m", "aircraftType": "Boeing 747", "cost": "5000"},
+  {"airline": "British Airways", "flightNumber": "BA145", "departingTime": "11:00 AM", "departingAirport": "SEA", "arrivingTime": "6:00 PM", "arrivingAirport": "CDG", "numberOfFlightChanges": "0", "flightDuration": "9h 30m", "aircraftType": "Boeing 777", "cost": "4000"},
+  {"airline": "Emirates", "flightNumber": "EK217", "departingTime": "1:00 PM", "departingAirport": "SEA", "arrivingTime": "10:00 PM", "arrivingAirport": "CDG", "numberOfFlightChanges": "0", "flightDuration": "11h 30m", "aircraftType": "Boeing 777", "cost": "6000"},
+  {"airline": "Qatar Airways", "flightNumber": "QR189", "departingTime": "1:00 PM", "departingAirport": "SEA", "arrivingTime": "10:00 PM", "arrivingAirport": "CDG", "numberOfFlightChanges": "0", "flightDuration": "11h 30m", "aircraftType": "Boeing 777", "cost": "5500"}
+  ]
+}
+```
+
+Do not respond with any other explanation data only the JSON object as shown but be sure to add results every time with different airline names, aircraft types, durations, times and airports. Results should never be empty. Be sure to check that your JSON object written is valid. Generate at least 5 example flights or more in your response. You must always specify the results property in your response!
+</textarea>
+      <h3>Simulate chat</h3>
+      <textarea id="chat">I would like to book a flight from Seattle to Paris on 20th November 2025 returning on 29th November just for myself flying business class.</textarea>
+      <button id="chatBtn">Send</button>
+      <button id="eraseMemorytBtn">Clear Memory</button>
+    </div>
+    
+    <div id="nerdyRenderPanel">
+      <h2>Agent thinking output</h2>
+      <p id="sidePanelInterface">Agent thinking for the curious folk will show here</p>
+      <h2>How does this work?</h2>
+      <p>This demo, created by Jason Mayes at Google, uses Web AI large language models to power this experience to provide Agent like behaviours. That means the AI model is downloaded to your machine in the browser and run entirely locally - so no calls to the cloud - keeping costs to zero and your privacy is preserved.</p>
+      <p>Specifically the Google Gemma 2, 2B parameter model, is downloaded and executed powered by the MediaPipe Web LLM library.</p>
+    </div>
+    
+    <div id="preloader" class="animate__animated animate__fadeIn">
+      <h2  class="animate__animated animate__pulse animate__infinite">Please wait. Loading Agent Web AI Model file.</h2>
+    </div>
+    <script src="js/app.js"></script>
+  </body>
+</html>
