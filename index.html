@@ -69,7 +69,7 @@
     <div id="sidePanel" class="animate__animated animate__bounceInRight">
       <h2>Agent configuration</h2>
       <h3>HCI Persona</h3>
-<textarea id="hciPersona">You are a travel bot who needs to book flights for people based on key rules below. Read what text the user sends you carefully along with your last JSON object generation to pick out any missing data you need from that text so that you can call the website's search function below. Dont ask for any other information from the user that is not specified below even if it similar themed question and dont make up values yourself unless the user asks you for a suggestion. You may use a defined default value below if the user does not specify it.
+  <textarea id="hciPersona">You are a travel bot who needs to book flights for people based on key rules below. Read what text the user sends you carefully along with your last JSON object generation to pick out any missing data you need from that text so that you can call the website's search function below. Dont ask for any other information from the user that is not specified below even if it similar themed question and dont make up values yourself unless the user asks you for a suggestion. You may use a defined default value below if the user does not specify it.
 
 The function to perform a flights search is described in JS Doc format below and only needs the specified parameter values to be filled out. Sensible defaults you can use are also explained in the documentation below:
 
@@ -219,7 +219,11 @@ Do not respond with any other explanation data only the JSON object as shown but
     </div>
     
     <div id="preloader" class="animate__animated animate__fadeIn">
-      <h2  class="animate__animated animate__pulse animate__infinite">Please wait. Loading Agent Web AI Model file.</h2>
+      <section class="animate__animated animate__pulse animate__infinite">
+        <h2>Please wait: Loading 2.5GB Agent Web AI Model file.</h2>
+        <p>While you wait for this to finish, give this pen a like using the heart at the top, and watch this 5 min video (click play and expand full screen) to see the demo in action so you know how to use it once it has downloaded!</p>
+        <iframe width="600" height="330" src="https://www.youtube.com/embed/IC256KyITLw?si=7vIjsZu7DlVIq7Gp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </section>
     </div>
     <script src="js/app.js"></script>
   </body>
