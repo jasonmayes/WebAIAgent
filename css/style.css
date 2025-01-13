@@ -292,16 +292,31 @@ body.search #talkToAgent {
   z-index: 1000;
 }
 
-#preloader h2 {
-  color: #e8eaed;
+#preloader h2, #preloader p {
+  color: #fff;
+  top: 0px;
+  position: absolute;
+  text-align: center;
+  width: calc(100% - 40px);
 }
 
-#preloader h2 {
+#preloader p {
+  top: 40px;
+  font-size: 13pt;
+}
+
+#preloader iframe {
   position: absolute;
-  top: calc(50% - 50px);
-  left: calc(50% - 160px);
-  width: 300px;
-  height: 100px;
+  bottom: 20px;
+  filter: grayscale(0);
+}
+
+#preloader section {
+  position: absolute;
+  top: calc(50% - 225px);
+  left: calc(50% - 300px);
+  width: 600px;
+  height: 450px;
   padding: 20px;
   background-color: #8ab4f8;
   font-size: 16pt;
