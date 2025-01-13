@@ -223,6 +223,8 @@ function displayPartialAgentResults(partialResults, complete) {
             agentSearch();
           }, 100);
         } else {
+          // Update GUI to show question.
+          SEARCH_RESULTS_AREA.innerHTML = '<h2>Please answer the follow up question below</h2><p>' + answerObj.followUpQuestion + '</p>';
           // Else ask follow up question for user to respond
           // to and wait for user to take action.
           let utterance = new SpeechSynthesisUtterance(answerObj.followUpQuestion);
@@ -267,9 +269,20 @@ function setupAgentPersonas() {
 }
 
 
-HCI_PERSONA_TEXTBOX.addEventListener('change', setupAgentPersonas);
-FAKE_API_PERSONA_TEXTBOX.addEventListener('change', setupAgentPersonas);
+function agentPersonaChange() {
+  agentPersonas = setupAgentPersonas();
+  
+  // Overwrite persona in current persona chat histories too.
+  CHAT_PERSONA_HISTORY[0] = agentPersonas[CHAT_PERSONA_NAME];
+  API_PERSONA_HISTORY[0] = agentPersonas[API_PERSONA_NAME];
+
+  SIDE_PANEL_LLM_WRITE_SPACE.innerText = '';
+}
+
+
 let agentPersonas = setupAgentPersonas();
+HCI_PERSONA_TEXTBOX.addEventListener('keyup', agentPersonaChange);
+FAKE_API_PERSONA_TEXTBOX.addEventListener('keyup', agentPersonaChange);
 CHAT_PERSONA_HISTORY.push(agentPersonas[CHAT_PERSONA_NAME]);
 API_PERSONA_HISTORY.push(agentPersonas[API_PERSONA_NAME]);
 
