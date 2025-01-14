@@ -25,6 +25,6 @@ If any issues open the blue side panel on the right by hoving over it and click 
 
 I will be adding to this over time but if you have any questions / feedback then you can find me over on LinkedIn or Twitter:
 
-* https://www.linkedin.com/in/webai/
-* https://x.com/jason_mayes
+* [https://www.linkedin.com/in/webai/](https://www.linkedin.com/in/webai/)
+* [https://x.com/jason_mayes](https://x.com/jason_mayes)
 
