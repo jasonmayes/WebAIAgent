@@ -10,6 +10,8 @@
  *********************************************************************/
 
 import {FilesetResolver, LlmInference} from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-genai';
+import FileProxyCache from 'https://cdn.jsdelivr.net/gh/jasonmayes/web-ai-model-proxy-cache@main/FileProxyCache.min.js';
+
 
 /**************************************************************
  * DOM References and defaults
@@ -28,18 +30,14 @@ const FAKE_API_PERSONA_TEXTBOX = document.getElementById('fakeAPIPersona');
 const CHAT_BTN = document.getElementById('chatBtn');
 const ERASE_MEMORY_BTN = document.getElementById('eraseMemorytBtn');
 const TALK_TO_AGENT_BTN = document.getElementById('talkToAgent');
+const PROGRESS = document.getElementById('progress');
 
 
 
 /**************************************************************
- * Web AI Gemma 2 LLM code
+ * Web AI Gemma 2 LLM code.
  **************************************************************/
-// Download and host your own gemma2 2b model. 
-// You can download it from Kaggle here:
-// https://www.kaggle.com/models/google/gemma-2/tfLite/gemma2-2b-it-gpu-int8
-// Once on a CDN put that CDN URL as the value for modelFileNameRemote
-const modelFileNameRemote = ''; 
-// Or host on localhost for faster dev work on reloads.
+const modelFileNameRemote = 'https://storage.googleapis.com/jmstore/WebAIDemos/models/Gemma2/gemma2-2b-it-gpu-int8.bin';
 const modelFileName = 'http://localhost/gemma2-2b-it-gpu-int8.bin';
 
 const CHAT_PERSONA_NAME = 'chatPersona';
@@ -51,19 +49,35 @@ let llmInference = undefined;
 let lastGeneratedResponse = '';
 let activePersona = '';
 
-async function initLLM(modelUrl) {
+
+
+function fileProgressCallback(textUpdate) {
+  PROGRESS.innerText = textUpdate;
+}
+
+
+async function initLLM() {
+  // Attempt to load from cache or localhost.
+  let dataUrl = await FileProxyCache.loadFromURL(modelFileName, fileProgressCallback);
+  // If failed due to no local file stored, fetch cloud version instead from cache or remote.
+  if (dataUrl === null) {
+    dataUrl = await FileProxyCache.loadFromURL(modelFileNameRemote, fileProgressCallback);
+  }
+  PROGRESS.innerText = 'Model downloaded. Intializing on GPU... Please wait.';
+  
   const genaiFileset = await FilesetResolver.forGenAiTasks(
       'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-genai/wasm');
   
   let llm = await LlmInference.createFromOptions(genaiFileset, {
     baseOptions: {
-      modelAssetPath: modelUrl
+      modelAssetPath: dataUrl
     },
     maxTokens: 8000,
     topK: 1,
     temperature: 0.01, // More deterministic and focused.
     randomSeed: 64
   });
+  //.createFromModelPath(genaiFileset, modelFileName)
 
   llmInference = llm;
   PRELOADER.classList.remove('animate__fadeIn');
@@ -97,17 +111,7 @@ function executeAgent(task, personaName, personaHistory) {
   }
 }
 
-
-// If loocalhost model not avail, download remote.
-window.addEventListener("unhandledrejection", function(promiseRejectionEvent) { 
-  if (promiseRejectionEvent.reason.message.includes("localhost")) {
-    initLLM(modelFileNameRemote);
-  }
-});
-
-
-// Try localhost first. Kick off LLM load right away.
-initLLM(modelFileName);
+initLLM();
 
 
 
@@ -265,6 +269,7 @@ function setupAgentPersonas() {
     [CHAT_PERSONA_NAME]: HCI_PERSONA_TEXTBOX.value + '\n The current date is: ' + dateStr,
     [API_PERSONA_NAME]: FAKE_API_PERSONA_TEXTBOX.value
   };
+  
   return personas;
 }
 
@@ -285,7 +290,6 @@ HCI_PERSONA_TEXTBOX.addEventListener('keyup', agentPersonaChange);
 FAKE_API_PERSONA_TEXTBOX.addEventListener('keyup', agentPersonaChange);
 CHAT_PERSONA_HISTORY.push(agentPersonas[CHAT_PERSONA_NAME]);
 API_PERSONA_HISTORY.push(agentPersonas[API_PERSONA_NAME]);
-
 
 
 /** 
