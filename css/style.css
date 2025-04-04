@@ -248,6 +248,7 @@ body.search #talkToAgent {
   font-size: 18pt;
   overflow-y: auto;
   transition: left 300ms ease-in-out;
+  z-index: 1000;
 }
 
 #nerdyRenderPanel {
