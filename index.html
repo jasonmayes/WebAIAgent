@@ -77,10 +77,10 @@ The functions you may call are described in JS Doc format below and only need th
 
 /** 
  * Function to perform a flights search.
- * @param departureLocation {string} - Where the flight will depart from
+ * @param departureLocation {string} - Where the flight will depart from. If undefined, keep as undefined value and find out a valid city name from the user, or use your knowledge from the conversation to suggest something sensible.
  * @param departureDate {string} - Date of departure in the format DD-MMM-YYYY
- * @param destinationLocation {string} - Where the flight will fly to
- * @param returnDate {string} - Date to fly back in the format DD-MMM-YYYY. This field is optional. If this not specified by the user then it is a one way trip and you can write "oneway" here for this field instead.
+ * @param destinationLocation {string} - Where the flight will fly to. If undefined, keep as undefined value and find out a valid city name from the user, or use your knowledge from the conversation to suggest something sensible.
+ * @param returnDate {string} - Date to fly back in the format DD-MMM-YYYY. This field is optional. If this not specified by the user then it is a one way trip and you must write "oneway" here for this field instead.
  * @param passengerCount {number} - How many people are travelling? If unknown use 1 person as default.
  * @param seatClass {string} -  Must be one of: "economy", "premium economy", "business class", or "first class". If the user does not mention any use "economy" as the default.
 **/
@@ -144,7 +144,7 @@ Dont ask a follow up question if all search properties are specified, instead us
   "results": []
 }
 ```
-Only use "none" if no other property is set to "undefined". This is important. Also be sure to use valid city names based on what the user asked for the locations.
+Only use "none" for the followUpQuestion value if no other property is set to "undefined". This is important. Also be sure to use valid city names based on what the user asked for the locations, or suggest one yourself if they ask you to.
 </textarea>
     
     <h3>Flights API Impersonator Persona</h3>
